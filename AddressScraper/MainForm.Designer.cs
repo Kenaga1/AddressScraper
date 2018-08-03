@@ -45,14 +45,19 @@
             this.buttonStop = new System.Windows.Forms.Button();
             this.progressBarCadde = new System.Windows.Forms.ProgressBar();
             this.progressBarBina = new System.Windows.Forms.ProgressBar();
-            this.progressBarDaire = new System.Windows.Forms.ProgressBar();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labelKalanSure = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBox1
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(76, 22);
+            this.comboBox1.Location = new System.Drawing.Point(76, 10);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(334, 21);
             this.comboBox1.TabIndex = 0;
@@ -73,7 +78,7 @@
             // 
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(76, 58);
+            this.comboBox2.Location = new System.Drawing.Point(76, 46);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(334, 21);
             this.comboBox2.TabIndex = 2;
@@ -83,7 +88,7 @@
             // 
             this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(76, 96);
+            this.comboBox3.Location = new System.Drawing.Point(76, 84);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(334, 21);
             this.comboBox3.TabIndex = 3;
@@ -93,7 +98,7 @@
             // 
             this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(76, 133);
+            this.comboBox4.Location = new System.Drawing.Point(76, 121);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(334, 21);
             this.comboBox4.TabIndex = 4;
@@ -141,7 +146,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(58, 30);
+            this.label1.Location = new System.Drawing.Point(58, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(12, 13);
             this.label1.TabIndex = 9;
@@ -150,7 +155,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(46, 66);
+            this.label2.Location = new System.Drawing.Point(46, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(24, 13);
             this.label2.TabIndex = 10;
@@ -159,7 +164,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 104);
+            this.label3.Location = new System.Drawing.Point(9, 92);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 13);
             this.label3.TabIndex = 11;
@@ -168,7 +173,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(26, 141);
+            this.label4.Location = new System.Drawing.Point(26, 129);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(44, 13);
             this.label4.TabIndex = 12;
@@ -176,7 +181,8 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(135, 171);
+            this.buttonStart.Enabled = false;
+            this.buttonStart.Location = new System.Drawing.Point(135, 150);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 13;
@@ -186,7 +192,8 @@
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(251, 171);
+            this.buttonStop.Enabled = false;
+            this.buttonStop.Location = new System.Drawing.Point(251, 150);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(75, 23);
             this.buttonStop.TabIndex = 14;
@@ -196,31 +203,76 @@
             // 
             // progressBarCadde
             // 
-            this.progressBarCadde.Location = new System.Drawing.Point(76, 228);
+            this.progressBarCadde.Location = new System.Drawing.Point(76, 198);
             this.progressBarCadde.Name = "progressBarCadde";
             this.progressBarCadde.Size = new System.Drawing.Size(334, 23);
             this.progressBarCadde.TabIndex = 15;
             // 
             // progressBarBina
             // 
-            this.progressBarBina.Location = new System.Drawing.Point(76, 257);
+            this.progressBarBina.Location = new System.Drawing.Point(76, 227);
             this.progressBarBina.Name = "progressBarBina";
             this.progressBarBina.Size = new System.Drawing.Size(334, 23);
             this.progressBarBina.TabIndex = 16;
             // 
-            // progressBarDaire
+            // label5
             // 
-            this.progressBarDaire.Location = new System.Drawing.Point(76, 286);
-            this.progressBarDaire.Name = "progressBarDaire";
-            this.progressBarDaire.Size = new System.Drawing.Size(334, 28);
-            this.progressBarDaire.TabIndex = 17;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(35, 208);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(38, 13);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Cadde";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(21, 237);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 13);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "Apartman";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(73, 264);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(31, 13);
+            this.linkLabel1.TabIndex = 20;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "........";
+            this.linkLabel1.Visible = false;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 264);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(67, 13);
+            this.label7.TabIndex = 21;
+            this.label7.Text = "Kayd. Dosya";
+            // 
+            // labelKalanSure
+            // 
+            this.labelKalanSure.AutoSize = true;
+            this.labelKalanSure.Location = new System.Drawing.Point(73, 182);
+            this.labelKalanSure.Name = "labelKalanSure";
+            this.labelKalanSure.Size = new System.Drawing.Size(59, 13);
+            this.labelKalanSure.TabIndex = 22;
+            this.labelKalanSure.Text = "Kalan Süre";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(440, 336);
-            this.Controls.Add(this.progressBarDaire);
+            this.ClientSize = new System.Drawing.Size(427, 293);
+            this.Controls.Add(this.labelKalanSure);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.progressBarBina);
             this.Controls.Add(this.progressBarCadde);
             this.Controls.Add(this.buttonStop);
@@ -238,7 +290,9 @@
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.btnGetCities);
             this.Controls.Add(this.comboBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Address Scraper";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
@@ -265,7 +319,12 @@
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.ProgressBar progressBarCadde;
         private System.Windows.Forms.ProgressBar progressBarBina;
-        private System.Windows.Forms.ProgressBar progressBarDaire;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelKalanSure;
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using ScrapySharp.Network;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +60,7 @@ namespace AddressScraper
             public string caddeTuru { get; set; }
             public string caddeAdi { get; set; }
             public string binaNo { get; set; }
-            public string binaAdi { get; set; }
+            public string binaKodu { get; set; }
             public string siteAdi { get; set; }
             public string apartmanAdi { get; set; }
             public string daireTuru { get; set; }
@@ -120,6 +122,8 @@ namespace AddressScraper
             comboBox2.SelectedIndex = 0;
             _ilKodu = ilkodu;
             _il = _iller.yt[index].text;
+            buttonStart.Enabled = false;
+            buttonStop.Enabled = false;
         }
 
         private async void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -143,6 +147,8 @@ namespace AddressScraper
             comboBox3.SelectedIndex = 0;
             _ilceKodu = ilcekodu;
             _ilce = _ilceler.yt[index].text;
+            buttonStart.Enabled = false;
+            buttonStop.Enabled = false;
         }
 
         private async void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
@@ -165,6 +171,8 @@ namespace AddressScraper
             comboBox4.SelectedIndex = 0;
             _koyKodu = koykodu;
             _koy = _koyler.yt[index].text;
+            buttonStart.Enabled = false;
+            buttonStop.Enabled = false;
         }
 
         private async void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
@@ -193,6 +201,8 @@ namespace AddressScraper
             comboBox5.SelectedIndex = 0;
             _mahalleKodu = mahallekodu;
             _mahalle = _mahalleler.yt[index].text;
+            buttonStart.Enabled = true;
+            buttonStop.Enabled = false;
         }
 
         private async void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
@@ -307,6 +317,14 @@ namespace AddressScraper
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
+            var baslangicZamani = DateTime.Now;
+            saveFileDialog1.Filter = "Excel dosyası|*.xlsx";
+            saveFileDialog1.DefaultExt = "xlsx";
+            linkLabel1.Visible = false;
+
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
+            buttonStop.Enabled = true;
+            buttonStart.Enabled = false;
             _adresListesi = new List<Adres>();
             _stopDownload = false;
             var t = new Task(delegate 
@@ -322,86 +340,173 @@ namespace AddressScraper
                 browser.Encoding = Encoding.UTF8;
                 WebPage homePage = null;
 
-                foreach (var cadde in _caddeler)
+                try
                 {
-                    if (_stopDownload) break;
-                    Invoke(new MethodInvoker(delegate
+                    if (_caddeler != null)
                     {
-                        progressBarCadde.Value += 1;
-                    }));
-
-                    var hucreler = cadde.SelectNodes("td");
-                    var caddeIsmi = hucreler[0].InnerText + "-" + hucreler[1].InnerText;
-                    caddeIsmi = caddeIsmi.Replace("&nbsp;", " ");
-
-                    var caddekodu = cadde.GetAttributeValue("id", "").Substring(1);
-
-                    var postData = $"fZwxqvPOpAViHEOXXVuXBaTd+2018072821lryxuVH5Y45L6Yb8Wo05CB46f1vrJzTCd1vDE8EiSLYLbaFSn0O0MhabkTx4t3A+Q==&t=dk&u={caddekodu}&term=";
-                    homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
-                        HttpVerb.Post, postData);
-
-                    _binalar = homePage.Html.SelectNodes("//tbody/tr");
-                    var binaSayisi = _binalar.Count;
-                    Invoke(new MethodInvoker(delegate
-                    {
-                        progressBarBina.Value = 0;
-                        progressBarBina.Maximum = binaSayisi;
-                    }));
-
-                    foreach (var bina in _binalar)
-                    {
-                        if (_stopDownload) break;
-
-                        //var hucreler2 = bina.SelectNodes("td");
-                        //var binaIsmi = hucreler2[0].InnerText + "-" + hucreler2[1].InnerText + "-" + hucreler2[2].InnerText + "-" + hucreler2[3].InnerText;
-                        //binaIsmi = binaIsmi.Replace("&nbsp;", " ");
-                        Invoke(new MethodInvoker(delegate
-                        {
-                            progressBarBina.Value += 1;
-                        }));
-
-                        var binakodu = bina.GetAttributeValue("id", "").Substring(1);
-
-                        postData = $"fZwxqvPOpAViHEOXXVuXBaTd+2018072821lryxuVH5Y45L6Yb8Wo05CB46f1vrJzTCd1vDE8EiSLYLbaFSn0O0MhabkTx4t3A+Q==&t=ick&u={binakodu}&term=";
-                        homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
-                            HttpVerb.Post, postData);
-
-                        _daireler = homePage.Html.SelectNodes("//tbody/tr");
-                        var daireSayisi = _daireler.Count;
-                        Invoke(new MethodInvoker(delegate
-                        {
-                            progressBarDaire.Value = 0;
-                            progressBarDaire.Maximum = daireSayisi;
-                        }));
-
-                        foreach (var daire in _daireler)
+                        foreach (var cadde in _caddeler)
                         {
                             if (_stopDownload) break;
-
                             Invoke(new MethodInvoker(delegate
                             {
-                                progressBarDaire.Value += 1;
+                                progressBarCadde.Value += 1;
                             }));
-                            //var hucreler3 = daire.SelectNodes("td");
-                            //var daireIsmi = hucreler3[0].InnerText + "-" + hucreler3[1].InnerText;
-                            //daireIsmi = daireIsmi.Replace("&nbsp;", " ");
+
+                            var hucreler = cadde.SelectNodes("td");
+                            var caddeTuru = hucreler[0].InnerText.Replace("&nbsp;", "");
+                            var caddeAdi = hucreler[1].InnerText.Replace("&nbsp;", "");
 
 
-                            //Debug.WriteLine("Adres Kodu: " + daire.GetAttributeValue("id", "").Substring(1));
-                            var adres = new Adres();
-                            adres.ilKodu = _ilKodu;
-                            adres.il = _il;
-                            adres.ilKodu = _ilKodu;
-                            adres.ilKodu = _ilKodu;
-                            adres.ilKodu = _ilKodu;
-                            adres.ilKodu = _ilKodu;
-                            _adresListesi.Add(adres);
+                            var caddekodu = cadde.GetAttributeValue("id", "");
+
+                            if (caddekodu.Length <= 1)
+                            {
+                                Debug.WriteLine("HHHHHH");
+                            }
+                            else
+                            {
+                                caddekodu = caddekodu.Substring(1);
+                            }
+
+
+                            var postData = $"fZwxqvPOpAViHEOXXVuXBaTd+2018072821lryxuVH5Y45L6Yb8Wo05CB46f1vrJzTCd1vDE8EiSLYLbaFSn0O0MhabkTx4t3A+Q==&t=dk&u={caddekodu}&term=";
+                            homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
+                                HttpVerb.Post, postData);
+
+                            _binalar = homePage.Html.SelectNodes("//tbody/tr");
+                            var binaSayisi = _binalar.Count;
+                            Invoke(new MethodInvoker(delegate
+                            {
+                                progressBarBina.Value = 0;
+                                progressBarBina.Maximum = binaSayisi;
+                            }));
+
+                            if (_binalar != null)
+                            {
+                                foreach (var bina in _binalar)
+                                {
+                                    if (_stopDownload) break;
+
+                                    var hucreler2 = bina.SelectNodes("td");
+
+                                    var binaNo = hucreler2[0].InnerText.Replace("&nbsp;", "");
+                                    var binaKodu = hucreler2[1].InnerText.Replace("&nbsp;", "");
+                                    var siteAdi = hucreler2[2].InnerText.Replace("&nbsp;", "");
+                                    var apartmanAdi = hucreler2[3].InnerText.Replace("&nbsp;", "");
+
+                                    Invoke(new MethodInvoker(delegate
+                                    {
+                                        progressBarBina.Value += 1;
+                                    }));
+
+                                    var binakodu = bina.GetAttributeValue("id", "");
+                                    if (binaKodu.Length <= 1)
+                                    {
+                                        Debug.WriteLine("HHHHHH");
+                                    } else
+                                    {
+                                        binakodu = binaKodu.Substring(1);
+                                    }
+
+                                    postData = $"fZwxqvPOpAViHEOXXVuXBaTd+2018072821lryxuVH5Y45L6Yb8Wo05CB46f1vrJzTCd1vDE8EiSLYLbaFSn0O0MhabkTx4t3A+Q==&t=ick&u={binakodu}&term=";
+                                    homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
+                                        HttpVerb.Post, postData);
+
+                                    _daireler = homePage.Html.SelectNodes("//tbody/tr");
+                                    var daireSayisi = _daireler.Count;
+
+                                    if (_daireler != null)
+                                    {
+                                        foreach (var daire in _daireler)
+                                        {
+                                            if (_stopDownload) break;
+
+
+                                            var hucreler3 = daire.SelectNodes("td");
+                                            var daireTuru = hucreler3.Count >= 1 ? hucreler3[0].InnerText.Replace("&nbsp;", "") : "";
+                                            var icKapiNo = hucreler3.Count >= 2 ? hucreler3[1].InnerText.Replace("&nbsp;", "") : "";
+                                            var adresKodu = daire.GetAttributeValue("id", "");
+                                            if (adresKodu.Length >= 2)
+                                            {
+                                                adresKodu = adresKodu.Substring(1);
+                                            }
+                                            //var daireIsmi = hucreler3[0].InnerText + "-" + hucreler3[1].InnerText;
+                                            //daireIsmi = daireIsmi.Replace("&nbsp;", " ");
+
+
+                                            //Debug.WriteLine("Adres Kodu: " + daire.GetAttributeValue("id", "").Substring(1));
+                                            var adres = new Adres();
+                                            adres.ilKodu = _ilKodu;
+                                            adres.il = _il;
+                                            adres.ilceKodu = _ilceKodu;
+                                            adres.ilce = _ilce;
+                                            adres.koyKodu = _koyKodu;
+                                            adres.koy = _koy;
+                                            adres.mahalleKodu = _mahalleKodu;
+                                            adres.mahalle = _mahalle;
+                                            adres.caddeTuru = caddeTuru;
+                                            adres.caddeAdi = caddeAdi;
+                                            adres.binaNo = binaNo;
+                                            adres.binaKodu = binaKodu;
+                                            adres.siteAdi = siteAdi;
+                                            adres.apartmanAdi = apartmanAdi;
+                                            adres.daireTuru = daireTuru;
+                                            adres.icKapiNo = icKapiNo;
+                                            adres.adresKodu = adresKodu;
+
+
+                                            _adresListesi.Add(adres);
+                                        }
+                                    }
+
+                                }
+
+                            }
+                            var gecenZaman = DateTime.Now.Subtract(baslangicZamani);
+                            var birCaddeIcinGecenZaman = (int)(gecenZaman.TotalSeconds / progressBarCadde.Value);
+                            var kalanCadde = progressBarCadde.Maximum - progressBarCadde.Value;
+                            var kalanZaman = kalanCadde * birCaddeIcinGecenZaman;
+                            var kalanZamanTS = TimeSpan.FromSeconds(kalanZaman);
+                            Invoke(new MethodInvoker(delegate
+                            {
+                                labelKalanSure.Text = "Geçen Süre: " + gecenZaman.ToString(@"hh\:mm\:ss") + " Kalan Süre: " + kalanZamanTS.ToString(@"hh\:mm\:ss");
+                            }));
+
                         }
+
+
 
                     }
 
-
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Bilgileri sorgularken hata oluştu:\r\n" + ex.Message, "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+
+                try
+                {
+                    using (var p = new ExcelPackage())
+                    {
+                        //A workbook must have at least on cell, so lets add one... 
+                        var ws = p.Workbook.Worksheets.Add("MySheet");
+                        ws.Cells.LoadFromCollection<Adres>(_adresListesi, true);
+                        ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                        //Save the new workbook. We haven't specified the filename so use the Save as method.
+                        p.SaveAs(new FileInfo(saveFileDialog1.FileName));
+                        Invoke(new MethodInvoker(delegate
+                        {
+                            linkLabel1.Visible = true;
+                            linkLabel1.Text = saveFileDialog1.FileName;
+                        }));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Dosya kaydedilirken hata oluştu:\r\n" + ex.Message, "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
             });
             t.Start();
         }
@@ -411,6 +516,13 @@ namespace AddressScraper
         private void buttonStop_Click(object sender, EventArgs e)
         {
             _stopDownload = true;
+            buttonStart.Enabled = true;
+            buttonStop.Enabled = false;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkLabel1.Text);
         }
     }
 }
