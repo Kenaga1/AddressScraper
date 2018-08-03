@@ -16,7 +16,7 @@ namespace AddressScraper
 {
     public partial class MainForm : Form
     {
-
+         
         ReturnData iller;
         ReturnData ilceler;
         ReturnData koyler;
