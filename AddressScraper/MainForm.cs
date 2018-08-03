@@ -338,6 +338,7 @@ namespace AddressScraper
 
                 ScrapingBrowser browser = new ScrapingBrowser();
                 browser.Encoding = Encoding.UTF8;
+                browser.Timeout = TimeSpan.FromSeconds(30);
                 WebPage homePage = null;
 
                 try
@@ -370,19 +371,25 @@ namespace AddressScraper
 
 
                             var postData = $"fZwxqvPOpAViHEOXXVuXBaTd+2018072821lryxuVH5Y45L6Yb8Wo05CB46f1vrJzTCd1vDE8EiSLYLbaFSn0O0MhabkTx4t3A+Q==&t=dk&u={caddekodu}&term=";
-                            homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
-                                HttpVerb.Post, postData);
-
-                            _binalar = homePage.Html.SelectNodes("//tbody/tr");
-                            var binaSayisi = _binalar.Count;
-                            Invoke(new MethodInvoker(delegate
+                            _binalar = null;
+                            try
                             {
-                                progressBarBina.Value = 0;
-                                progressBarBina.Maximum = binaSayisi;
-                            }));
+                                homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
+                                    HttpVerb.Post, postData);
+                                _binalar = homePage.Html.SelectNodes("//tbody/tr");
+                            }
+                            catch (Exception)
+                            {
+                            }
 
                             if (_binalar != null)
                             {
+                                var binaSayisi = _binalar.Count;
+                                Invoke(new MethodInvoker(delegate
+                                {
+                                    progressBarBina.Value = 0;
+                                    progressBarBina.Maximum = binaSayisi;
+                                }));
                                 foreach (var bina in _binalar)
                                 {
                                     if (_stopDownload) break;
@@ -409,11 +416,17 @@ namespace AddressScraper
                                     }
 
                                     postData = $"fZwxqvPOpAViHEOXXVuXBaTd+2018072821lryxuVH5Y45L6Yb8Wo05CB46f1vrJzTCd1vDE8EiSLYLbaFSn0O0MhabkTx4t3A+Q==&t=ick&u={binakodu}&term=";
-                                    homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
-                                        HttpVerb.Post, postData);
+                                    _daireler = null;
+                                    try
+                                    {
+                                        homePage = browser.NavigateToPage(new Uri("http://adreskodu.dask.gov.tr/site-element/control/load.ashx"),
+                                            HttpVerb.Post, postData);
 
-                                    _daireler = homePage.Html.SelectNodes("//tbody/tr");
-                                    var daireSayisi = _daireler.Count;
+                                        _daireler = homePage.Html.SelectNodes("//tbody/tr");
+                                    }
+                                    catch (Exception)
+                                    {
+                                    }
 
                                     if (_daireler != null)
                                     {
@@ -506,6 +519,11 @@ namespace AddressScraper
                 {
                     MessageBox.Show("Dosya kaydedilirken hata oluştu:\r\n" + ex.Message, "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                Invoke(new MethodInvoker(delegate
+                {
+                    buttonStart.Enabled = true;
+                    buttonStop.Enabled = false;
+                }));
 
             });
             t.Start();
@@ -516,7 +534,6 @@ namespace AddressScraper
         private void buttonStop_Click(object sender, EventArgs e)
         {
             _stopDownload = true;
-            buttonStart.Enabled = true;
             buttonStop.Enabled = false;
         }
 
